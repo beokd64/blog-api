@@ -3,11 +3,7 @@ const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema({
   title: String,
   content: String,
-  author: String,
-  created_at: {
-    type: Date,
-    default: Date.now
-  }
+  author: String
 });
 
 module.exports = mongoose.model('Post', postSchema);
