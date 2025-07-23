@@ -1,24 +1,20 @@
+// app.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const postRoutes = require('./routes/posts');
 
 const app = express();
-const port = 3000;
-
 app.use(cors());
 app.use(express.json());
 
-// 🔁 Connect to MongoDB Atlas
-mongoose.connect('mongodb+srv://beokd64:85211@cluster0.cbtbxx0.mongodb.net/blog?retryWrites=true&w=majority&appName=Cluster0', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log("Connected to MongoDB Atlas"))
-  .catch(err => console.error("MongoDB connection error:", err));
+mongoose.connect(process.env.MONGODB_URI || 'your_connection_string');
 
-// Routes
-const postRoutes = require('./routes/posts');
-app.use('/posts', postRoutes);
+app.use('/posts', postRoutes); // ✅ This must exist
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.get('/', (req, res) => {
+  res.send('Blog API running');
 });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
