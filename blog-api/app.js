@@ -1,20 +1,30 @@
-// app.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const postRoutes = require('./routes/posts');
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URI || 'your_connection_string');
+// MongoDB connection
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://beokd64:85211@cluster0.cbtbxx0.mongodb.net/blogdb?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('✅ Connected to MongoDB'))
+.catch(err => console.error('❌ MongoDB connection error:', err));
 
-app.use('/posts', postRoutes); // ✅ This must exist
+// API Routes
+app.use('/posts', postRoutes);
 
+// Health check route
 app.get('/', (req, res) => {
-  res.send('Blog API running');
+  res.send('Blog API is running!');
 });
 
+// Start server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server is running on port ${PORT}`));
